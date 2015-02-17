@@ -6,7 +6,7 @@ are redirected to http://172.16.0.12/. This can be changed in
 =karsten_fw/block_macs.php= and =karsten_fw/unblock_macs.php=.
 
 Start by running =karsten_fw/block_macs.php= once (the corridor to block can be
-changed in that file accordingly). Then a crontab-job will be setup to run every
+changed in that file accordingly). Then a crontab-job should be set up to run every
 minute, adding- or deleting mac-addresses in the iptables.
 
 To entirely remove the effects of this scrip, uncomment the entry in the
@@ -19,12 +19,12 @@ cd /etc/firewall/
 
 * Decrypting =dbconnect.inc.php=
 
-=dbconnect.inc.php= contains user and password for connecting to the MySQL
-databases on =Loki= and =Dragon= and thus they are encrypted using [[https://www.agwa.name/projects/git-crypt/][git-crypt]]. They
-are encrypted using PGP and the nu@tudentergaarden.dk public key.
+=dbconnect.inc.php= contains usernames and passwords for connecting to the
+MySQL databases on =Loki= and =Dragon= and thus are encrypted using [[https://www.agwa.name/projects/git-crypt/][git-crypt]].
+They are encrypted using PGP and the nu@tudentergaarden.dk public key.
 
 To decrypt, the corresponding private key is needed. This key is already
-installed on the root account on =Dragon=, thus the only thing needed after 
+installed on the root account on =Dragon=. The only thing needed after 
 =git clone= on =Dragon= is 
 
 #+BEGIN_SRC sh
@@ -64,7 +64,9 @@ Now, only an virtual ip-address needs to be created.
 
 *** Create virtual ip-address
 **** Temporary
+#+BEGIN_SRC sh
 $ ifconfig eth2:0 172.16.0.12
+#+END_SRC
 
 The above command will create a new virtual network interface based on original
 eth2 physical interface. The only most important condition for creating the
