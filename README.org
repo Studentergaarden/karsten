@@ -39,6 +39,7 @@ In short, logon to Dragon(the firewall) and do the following
 ssh user@dragon
 git clone git@github.com:Studentergaarden/karsten.git
 cd karsten
+git-crypt unlock
 ln -s karsten_www /var/misc_www/karsten
 ln -s karsten_apache /etc/apache2/sites-available/karsten
 ln -s karsten_fw /etc/firewall/karsten
