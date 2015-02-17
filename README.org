@@ -46,7 +46,6 @@ git-crypt unlock
 ln -s /full/path/karsten_www /var/misc_www/karsten
 ln -s /full/path/karsten_apache /etc/apache2/sites-available/karsten
 ln -s /full/path/karsten_fw /etc/firewall/karsten
-ln -s karsten_fw /etc/firewall/karsten
 ifconfig eth2:0 172.16.0.12
 a2ensite karsten
 apache2ctl -k graceful
@@ -54,8 +53,8 @@ php /etc/firewall/karsten/block_macs.php
 #+END_SRC
 
 ** Firewall
-Copy =karsten_fw= to =/etc/firewall/karsten= and add the following to crontab
-file =/etc/firewall/crontab=
+Copy( or make symbolic link) =karsten_fw= to =/etc/firewall/karsten= and add the
+following to the crontab file =/etc/firewall/crontab=
 #+BEGIN_SRC sh
 * *   * * *   root   /usr/bin/nice /etc/firewall/karsten/unblock_macs.php          # every minute
 #+END_SRC
