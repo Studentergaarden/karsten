@@ -30,7 +30,7 @@ installed on the root account on =Dragon=. The only thing needed after
 #+BEGIN_SRC sh
 git-crypt unlock
 #+END_SRC
-
+The passphrase is the same as the one for the root user account.
 
 * Install
 
@@ -38,6 +38,8 @@ In short, logon to Dragon(the firewall) and do the following
 #+BEGIN_SRC sh
 ssh user@dragon
 git clone git@github.com:Studentergaarden/karsten.git
+# or maybe
+git clone https://github.com/Studentergaarden/karsten.git
 cd karsten
 git-crypt unlock
 ln -s karsten_www /var/misc_www/karsten
