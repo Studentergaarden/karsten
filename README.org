@@ -53,6 +53,7 @@ php /etc/firewall/karsten/block_macs.php
 
 ** Firewall
 Copy =karsten_fw= to =/etc/firewall/karsten= and add the following to crontab
+file =/etc/firewall/crontab=
 #+BEGIN_SRC sh
 * *   * * *   root   /usr/bin/nice /etc/firewall/karsten/unblock_macs.php          # every minute
 #+END_SRC
