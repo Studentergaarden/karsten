@@ -1,0 +1,85 @@
+* Just for fun
+
+This will block a corridors internet-access for two minutes every hour(timing
+can be changed in =karsten_www/index.php=). When the internet is blocked, people
+are redirected to http://172.16.0.12/. This can be changed in
+=karsten_fw/block_macs.php= and =karsten_fw/unblock_macs.php=.
+
+Start by running =karsten_fw/block_macs.php= once (the corridor to block can be
+changed in that file accordingly). Then a crontab-job will be setup to run every
+minute, adding- or deleting mac-addresses in the iptables.
+
+To entirely remove the effects of this scrip, uncomment the entry in the
+=crontab= and restart the firewall.
+
+#+BEGIN_SRC sh
+cd /etc/firewall/
+/etc/init.d/firewall restart
+#+END_SRC
+
+* Decrypting =dbconnect.inc.php=
+
+=dbconnect.inc.php= contains user and password for connecting to the MySQL
+databases on =Loki= and =Dragon= and thus they are encrypted using [[https://www.agwa.name/projects/git-crypt/][git-crypt]]. They
+are encrypted using PGP and the nu@tudentergaarden.dk public key.
+
+To decrypt, the corresponding private key is needed. This key is already
+installed on the root account on =Dragon=, thus the only thing needed after 
+=git clone= on =Dragon= is 
+
+#+BEGIN_SRC sh
+git-crypt unlock
+#+END_SRC
+
+
+* Install
+
+In short, logon to Dragon(the firewall) and do the following
+#+BEGIN_SRC sh
+ssh user@dragon
+git clone git@github.com:Studentergaarden/karsten.git
+cd karsten
+ln -s karsten_www /var/misc_www/karsten
+ln -s karsten_apache /etc/apache2/sites-available/karsten
+ln -s karsten_fw /etc/firewall/karsten
+ifconfig eth2:0 172.16.0.12
+a2ensite karsten
+apache2ctl -k graceful
+php /etc/firewall/karsten/block_macs.php
+#+END_SRC
+
+** Firewall
+Copy =karsten_fw= to =/etc/firewall/karsten= and add the following to crontab
+#+BEGIN_SRC sh
+* *   * * *   root   /usr/bin/nice /etc/firewall/karsten/unblock_macs.php          # every minute
+#+END_SRC
+
+** web
+
+Copy =karsten_www= to =/var/misc_www/karsten= and =karsten_apache= to
+=/etc/apache2/sites-available/karsten=. Add the file to apache, =a2ensite
+karsten= and restart the service, =apache2ctl -k graceful=.
+
+Now, only an virtual ip-address needs to be created.
+
+*** Create virtual ip-address
+**** Temporary
+$ ifconfig eth2:0 172.16.0.12
+
+The above command will create a new virtual network interface based on original
+eth2 physical interface. The only most important condition for creating the
+virtual network interface is the physical network interface, as in our case eth2
+must exists.
+
+**** Permanent
+
+Add to =/etc/network/interfaces=
+#+BEGIN_SRC sh
+iface eth2:0 inet static
+address 123.123.22.22
+netmask 255.255.0.0
+broadcast 172.16.255.255
+#+END_SRC
+
+Restart the network(or add the changes temporary)
+=/etc/init.d/networking restart=

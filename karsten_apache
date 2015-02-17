@@ -1,0 +1,62 @@
+#<VirtualHost stop.studentergaarden.dk:80>
+<VirtualHost 172.16.0.12:80>
+	ServerAdmin pawse@studentergaarden.dk
+	ServerName karsten.studentergaarden.dk
+	ServerAlias karsten
+	
+        #
+        # Logging
+        # ------
+	ErrorLog /var/log/apache2/karsten.studentergaarden.dk_error.log
+        CustomLog /var/log/apache2/karsten.studentergaarden.dk_access.log combined
+        CookieLog /var/log/apache2/karsten.studentergaarden.dk_cookie.log         
+							
+        #
+        # Rewrite rules
+        # -------------
+        #RewriteEngine On
+		       														
+	DocumentRoot /var/misc_www/karsten
+	<Directory />
+		Options FollowSymLinks
+		AllowOverride None
+	</Directory>
+
+</VirtualHost>
+
+
+<VirtualHost 172.16.0.12:443>
+        #                                
+        # Public information             
+        # ------------------             
+        ServerName karsten.studentergaarden.dk
+        ServerAlias karsten
+        ServerAdmin paw@studentergaarden.dk
+        #                                 
+        # Logging                         
+        # -------                         
+        ErrorLog /var/log/apache2/karsten.studentergaarden.dk_error-s.log
+        CustomLog /var/log/apache2/karsten.studentergaarden.dk_access-s.log combined
+        CookieLog /var/log/apache2/karsten.studentergaarden.dk_cookie-s.log
+
+
+        Include /etc/apache2/ssl.conf
+
+        <Directory />
+                AuthType Basic
+                AuthName "Net"
+                AuthUserFile /etc/apache2/ssl/.https
+                #Require valid-user
+        </Directory>
+
+        #
+        # Main site
+        # ---------
+
+	DocumentRoot /var/misc_www/karsten
+	<Directory />
+		Options FollowSymLinks
+		AllowOverride None
+	</Directory>
+
+</VirtualHost>
